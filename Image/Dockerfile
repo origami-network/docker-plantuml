@@ -1,20 +1,22 @@
 FROM microsoft/windowsservercore as builder
 
-ARG GRAPHVIZ_VERSION=2.38
-ARG GRAPHVIZ_URL=https://graphviz.gitlab.io/_pages/Download/windows/graphviz-${GRAPHVIZ_VERSION}.zip
+ARG ARG_GRAPHVIZ_VERSION=2.38
+ARG ARG_GRAPHVIZ_URL=https://graphviz.gitlab.io/_pages/Download/windows/graphviz-${ARG_GRAPHVIZ_VERSION}.zip
+ARG ARG_GRAPHVIZ_PATH=C:\Graphviz
 
 RUN powershell.exe -Command $ErrorActionPreference = 'Stop'; \
-  $filePath = Join-Path $env:TEMP graphviz.zip ; \
-  Invoke-WebRequest $env:GRAPHVIZ_URL -OutFile $filePath
+  $filePath = Join-Path $env:TEMP Graphviz.zip ; \
+  Invoke-WebRequest $env:ARG_GRAPHVIZ_URL -OutFile $filePath ; \
+  Expand-Archive -Path $filePath -DestinationPath $env:ARG_GRAPHVIZ_PATH
 
-# TODO: Upack Graphviz
 # TODO: Download PlantUML
 
 
 FROM openjdk:8u171-jdk-windowsservercore
 
-# FIXME: It is just for test
-RUN java -version
+ARG ARG_GRAPHVIZ_PATH=C:\Graphviz
 
-# TODO: install Graphviz
+COPY --from=builder ${ARG_GRAPHVIZ_PATH} ${ARG_GRAPHVIZ_PATH}
+ENV GRAPHVIZ_DOT=${ARG_GRAPHVIZ_PATH}\release\bin\dot.exe
+
 # TODO: install PlantUML

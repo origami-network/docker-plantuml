@@ -4,4 +4,4 @@ install:
   - ps: Install-Module -Name Pester -RequiredVersion 4.3.1 -Force -SkipPublisherCheck 
 
 build_script:
-  - docker build
+  - docker build Image

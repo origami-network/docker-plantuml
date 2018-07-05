@@ -2,7 +2,7 @@ FROM microsoft/windowsservercore as builder
 
 ARG ARG_GRAPHVIZ_VERSION=2.38
 ARG ARG_GRAPHVIZ_URL=https://graphviz.gitlab.io/_pages/Download/windows/graphviz-${ARG_GRAPHVIZ_VERSION}.zip
-ARG ARG_GRAPHVIZ_PATH=C:\Graphviz
+ARG ARG_GRAPHVIZ_PATH=C:\\Graphviz
 
 RUN powershell.exe -Command $ErrorActionPreference = 'Stop'; \
   $filePath = Join-Path $env:TEMP Graphviz.zip ; \
@@ -14,9 +14,9 @@ RUN powershell.exe -Command $ErrorActionPreference = 'Stop'; \
 
 FROM openjdk:8u171-jdk-windowsservercore
 
-ARG ARG_GRAPHVIZ_PATH=C:\Graphviz
+ARG ARG_GRAPHVIZ_PATH=C:\\Graphviz
 
 COPY --from=builder ${ARG_GRAPHVIZ_PATH} ${ARG_GRAPHVIZ_PATH}
-ENV GRAPHVIZ_DOT=${ARG_GRAPHVIZ_PATH}\release\bin\dot.exe
+ENV GRAPHVIZ_DOT=${ARG_GRAPHVIZ_PATH}\\release\\bin\\dot.exe
 
 # TODO: install PlantUML

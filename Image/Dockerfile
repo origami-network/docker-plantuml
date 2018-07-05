@@ -4,7 +4,7 @@ ARG GRAPHVIZ_VERSION=2.38
 ARG GRAPHVIZ_URL=https://graphviz.gitlab.io/_pages/Download/windows/graphviz-${GRAPHVIZ_VERSION}.zip
 
 RUN powershell.exe -Command $ErrorActionPreference = 'Stop'; \
-  $filePath = Join-Path $env:TEMP graphviz.zip \
+  $filePath = Join-Path $env:TEMP graphviz.zip ; \
   Invoke-WebRequest $env:GRAPHVIZ_URL -OutFile $filePath
 
 # TODO: Upack Graphviz

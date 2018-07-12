@@ -14,3 +14,7 @@ test_script:
   
 on_finish:
   - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\Artifacts\Spec.NUnit.xml'))
+
+deploy_script:
+  - ps: Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)"
+  

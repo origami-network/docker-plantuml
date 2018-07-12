@@ -11,7 +11,7 @@ before_test:
   - ps: Install-Module -Name Pester -RequiredVersion 4.3.1 -Force -SkipPublisherCheck
 
 test_script:
-  - ps: Invoke-Pester -Path ".\Spec" -OutputFormat NUnitXml -OutputFile '.\Artifacts\Spec.NUnit.xml' -EnableExit
+  - ps: Invoke-Pester -Path ".\Spec" -OutputFormat NUnitXml -OutputFile '.\Artifacts\Spec.NUnit.xml' -EnableExit -Verbose
   
 on_finish:
   - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\Artifacts\Spec.NUnit.xml'))

@@ -1,6 +1,7 @@
 Describe "PlantUML image" {
     It "can use GraphViz" {
-        & docker run 'origaminetwork/plantuml'
+        & docker run 'origaminetwork/plantuml' |
+            % { Write-Verbose $_ }
 
         Write-Error "TODO: implement it"
     }

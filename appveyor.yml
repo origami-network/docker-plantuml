@@ -1,7 +1,6 @@
 image: Visual Studio 2017
 
 install:
-   - ps: Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)"
    - ps: New-Item -ItemType directory .\Artifacts | Out-Null
 
 build_script:

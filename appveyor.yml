@@ -18,4 +18,7 @@ on_finish:
 
 deploy_script:
   - ps: Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)"
-  
+
+  # TODO: publish image
+  # - docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
+  # - docker push me/myfavoriteapp

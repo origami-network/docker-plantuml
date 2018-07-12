@@ -34,5 +34,6 @@ ENV GRAPHVIZ_DOT=${ARG_GRAPHVIZ_PATH}\\release\\bin\\dot.exe
 
 COPY --from=pluntuml ${ARG_PLANTUML_PATH} ${ARG_PLANTUML_PATH}
 
+SHELL ["cmd", "/S", "/C"]
 # TODO: enrypoint PlantUML
 ENTRYPOINT [ "echo", "%GRAPHVIZ_DOT%" ]

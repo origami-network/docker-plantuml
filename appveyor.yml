@@ -1,0 +1,21 @@
+image: Visual Studio 2017
+
+install:
+   - ps: Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)"
+   - ps: New-Item -ItemType directory .\Artifacts | Out-Null
+
+build_script:
+  - docker build Image
+  
+before_test:
+  - ps: Install-Module -Name Pester -RequiredVersion 4.3.1 -Force -SkipPublisherCheck
+
+test_script:
+  - ps: Invoke-Pester -Path ".\Spec" -OutputFormat NUnitXml -OutputFile '.\Artifacts\Spec.NUnit.xml' -EnableExit
+  
+on_finish:
+  - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\Artifacts\Spec.NUnit.xml'))
+
+deploy_script:
+  - ps: Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)"
+  

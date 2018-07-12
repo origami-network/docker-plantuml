@@ -1,5 +1,7 @@
 Describe "PlantUML image" {
     It "can use GraphViz" {
+        & docker run 'origaminetwork/plantuml'
+
         Write-Error "TODO: implement it"
     }
 
@@ -16,5 +18,5 @@ Describe "PlantUML image" {
             '--env', "PLANTUML_INCLUDE_PATH=TODO: define test path"
         )
         Write-Error "TODO: implement it"
-    }   
+    }
 }

@@ -4,7 +4,7 @@ install:
    - ps: New-Item -ItemType directory .\Artifacts | Out-Null
 
 build_script:
-  - docker build Image
+  - docker build -t origaminetwork/plantuml Image
   
 before_test:
   - ps: Install-Module -Name Pester -RequiredVersion 4.3.1 -Force -SkipPublisherCheck

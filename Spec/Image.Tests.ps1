@@ -1,6 +1,6 @@
 Describe "PlantUML image" {
     It "can use GraphViz" {
-        (& docker run 'origaminetwork/plantuml') |
+        (& docker run 'origaminetwork/plantuml' -testdot) |
             % { Write-Host $_ }
 
         Write-Error "TODO: implement it"

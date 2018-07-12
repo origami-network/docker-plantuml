@@ -18,7 +18,7 @@ ARG ARG_PLANTUML_URL=https://downloads.sourceforge.net/project/plantuml/${ARG_PL
 ARG ARG_PLANTUML_PATH=C:\\PlantUML
 
 RUN powershell.exe -Command $ErrorActionPreference = 'Stop' ; \
-  New-Item -ItemType Directory $env:ARG_PLANTUML_PATH | Out-Null ; \
+  $unused = New-Item -ItemType Directory $env:ARG_PLANTUML_PATH ; \
   $filePath = Join-Path $env:ARG_PLANTUML_PATH plantuml.jar ; \
   [Net.ServicePointManager]::SecurityProtocol = 'Tls', 'Tls11', 'Tls12' ; \
   Invoke-WebRequest $env:ARG_PLANTUML_URL -OutFile $filePath -UserAgent 'Chrome'

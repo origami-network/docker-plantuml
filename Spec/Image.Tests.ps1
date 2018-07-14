@@ -1,5 +1,9 @@
 param (
-    $ImageName = 'origaminetwork/plantuml'
+    $Here = (Split-Path -Parent $MyInvocation.MyCommand.Path),
+
+    $ImageName = 'origaminetwork/plantuml',
+
+    $ExamplesPath = (Join-Path $Here Examples)
 )
 
 Describe "PlantUML image" {
@@ -14,8 +18,8 @@ Describe "PlantUML image" {
 
         Write-Host "> docker $($arguments -join ' ')"
         $result = & docker $arguments
-        
-        Write-Host $result 
+        $result |
+            Write-Host
 
         $LASTEXITCODE |
             Should -Be 0
@@ -27,13 +31,50 @@ Describe "PlantUML image" {
             Should -HaveCount 1
     }
 
-    It "generates PNG diagram from file" {
-        Write-Error "TODO: implement it"
+    Context "Simple diagram" {
+        $diagramFileName = 'diagram.puml'
+        $diagramFile = Join-Path $TestDrive $diagramFileName
+        $diagram = @"
+@startuml
+
+class ArrayList
+ArrayList : add()
+ArrayList : remove()
+
+@enduml
+"@
+        Set-Content -Value $diagram -Path $diagramFile
+
+        $volumePath = "C:\Volume"
+        $volumeFile = Join-Path $volumePath $diagramFileName
+        $docker = @(
+            'run',
+            '-v', "$($TestDrive):$($volumePath)"
+            $ImageName
+        )
+
+        It "generates PNG diagram from file" {
+            $resultFile = [System.IO.Path]::ChangeExtension($diagramFile, '.png')
+            $plantuml = @(
+                $volumeFile 
+            )
+            $arguments = $docker + $plantuml
+    
+            Write-Host "> docker $($arguments -join ' ')"
+            & docker $arguments |
+                Write-Host 
+
+            $LASTEXITCODE |
+                Should -Be 0
+            $resultFile |
+                Should -Exist
+        }
+    
+        It "generates SVG diagram from file" {
+            Write-Error "TODO: implement it"
+        }
     }
 
-    It "generates SVG diagram from file" {
-        Write-Error "TODO: implement it"
-    }
 
     It "can use custom include path" {
         $arguments = @(

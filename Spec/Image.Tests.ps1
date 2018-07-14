@@ -1,9 +1,22 @@
 Describe "PlantUML image" {
-    It "can use GraphViz" {
-        (& docker run 'origaminetwork/plantuml' -testdot) |
-            % { Write-Host $_ }
+    It "has configured GraphViz" {
+        $arguments = @(
+            'run', 'origaminetwork/plantuml',
+            '-testdot'
+        )
 
-        Write-Error "TODO: implement it"
+        Write-Host "> docker $($arguments -join ' ')"
+        $result = & docker $arguments
+        Write-Host $result 
+
+        $LASTEXITCODE |
+            Should -Be 0
+        $result |
+            ? { $_ -like 'Error:*' } |
+            Should -HaveCount 0
+        $result |
+            ? { $_ -like '*OK*' } } |
+            Should -HaveCount 1
     }
 
     It "generates PNG diagram from file" {

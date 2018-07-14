@@ -88,11 +88,64 @@ ArrayList : remove()
         }
     }
 
+    Context "Custom include path" {
+        $includePath = Join-Path $TestDrive 'Include'
+        New-Item -ItemType Directory $includePath |
+            Out-Null
 
-    It "can use custom include path" {
-        $arguments = @(
-            '--env', "PLANTUML_INCLUDE_PATH=TODO: define test path"
+        $includeFileName = 'include.puml'
+        $includeFile = Join-Path $includePath $includeFileName
+        $include = @"
+@startuml
+
+interface List
+List : add()
+List : remove()
+
+@enduml
+"@
+        Set-Content -Value $include -Path $includeFile
+
+        $diagramFileName = 'diagram.puml'
+        $diagramFile = Join-Path $TestDrive $diagramFileName
+        $diagram = @"
+@startuml
+
+!include $($includeFileName)
+
+class ArrayList
+ArrayList : size()
+
+List <|.. ArrayList
+
+@enduml
+"@
+        Set-Content -Value $diagram -Path $diagramFile
+
+        $volumePath = "C:\Volume"
+        $volumeFile = Join-Path $volumePath $diagramFileName
+        $docker = @(
+            'run',
+            '-e', "PLANTUML_INCLUDE_PATH=$(Join-Path $volumePath 'Include')"
+            '-v', "$($TestDrive):$($volumePath)"
+            $ImageName
         )
-        Write-Error "TODO: implement it"
+
+        It "finds include file" {
+            $resultFile = [System.IO.Path]::ChangeExtension($diagramFile, '.png')
+            $plantuml = @(
+                $volumeFile
+            )
+            $arguments = $docker + $plantuml
+    
+            Write-Host "> docker $($arguments -join ' ')"
+            & docker $arguments |
+                Write-Host
+
+            $LASTEXITCODE |
+                Should -Be 0
+            $resultFile |
+                Should -Exist
+        }
     }
 }

@@ -15,7 +15,7 @@ Describe "PlantUML image" {
             ? { $_ -like 'Error:*' } |
             Should -HaveCount 0
         $result |
-            ? { $_ -like '*OK*' } } |
+            ? { $_ -like '*OK*' } |
             Should -HaveCount 1
     }
 

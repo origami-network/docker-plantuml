@@ -1,12 +1,20 @@
+param (
+    $ImageName = 'origaminetwork/plantuml'
+)
+
 Describe "PlantUML image" {
     It "has configured GraphViz" {
-        $arguments = @(
-            'run', 'origaminetwork/plantuml',
+        $plantuml = @(
             '-testdot'
         )
+        $docker = @(
+            'run', $ImageName
+        )
+        $arguments = $docker + $plantuml
 
         Write-Host "> docker $($arguments -join ' ')"
         $result = & docker $arguments
+        
         Write-Host $result 
 
         $LASTEXITCODE |

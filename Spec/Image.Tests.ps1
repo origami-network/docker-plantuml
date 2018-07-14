@@ -56,13 +56,13 @@ ArrayList : remove()
         It "generates PNG diagram from file" {
             $resultFile = [System.IO.Path]::ChangeExtension($diagramFile, '.png')
             $plantuml = @(
-                $volumeFile 
+                $volumeFile
             )
             $arguments = $docker + $plantuml
     
             Write-Host "> docker $($arguments -join ' ')"
             & docker $arguments |
-                Write-Host 
+                Write-Host
 
             $LASTEXITCODE |
                 Should -Be 0
@@ -71,7 +71,20 @@ ArrayList : remove()
         }
     
         It "generates SVG diagram from file" {
-            Write-Error "TODO: implement it"
+            $resultFile = [System.IO.Path]::ChangeExtension($diagramFile, '.svg')
+            $plantuml = @(
+                '-tsvg', $volumeFile
+            )
+            $arguments = $docker + $plantuml
+    
+            Write-Host "> docker $($arguments -join ' ')"
+            & docker $arguments |
+                Write-Host
+
+            $LASTEXITCODE |
+                Should -Be 0
+            $resultFile |
+                Should -Exist
         }
     }
 

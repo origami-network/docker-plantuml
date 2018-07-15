@@ -6,6 +6,36 @@ param (
     $ExamplesPath = (Join-Path $Here Examples)
 )
 
+function New-TestDriveFile {
+    param(
+        $File,
+        $Value
+    )
+
+    $FileName = Split-Path -Leaf $File
+    $SubPath = Split-Path -Parent $File
+    $TestFile = Join-Path $TestDrive $File
+
+    if ($SubPath) {
+        New-Item (Join-Path $TestDrive $SubPath) -ItemType Directory -ErrorAction SilentlyContinue |
+            Out-Null        
+    }
+    
+    Set-Content -Value $Value -Path $TestFile
+
+    Write-Host "== BEGIN: $($File) =="
+    Get-Content -Path $TestFile |
+        Write-Host
+    Write-Host "== END: $($File) =="
+
+    @{
+        File = $File
+        FileName = $FileName
+        SubPath = $SubPath
+        TestFile = $TestFile
+    }
+}
+
 Describe "PlantUML image" {
     It "has configured GraphViz" {
         $plantuml = @(
@@ -56,7 +86,7 @@ ArrayList : remove()
                 $volumeFile
             )
             $arguments = $docker + $plantuml
-    
+
             Write-Host "> docker $($arguments -join ' ')"
             & docker $arguments |
                 Write-Host
@@ -66,14 +96,14 @@ ArrayList : remove()
             $resultFile |
                 Should -Exist
         }
-    
+
         It "generates SVG diagram from file" {
             $resultFile = [System.IO.Path]::ChangeExtension($diagram.TestFile, '.svg')
             $plantuml = @(
                 '-tsvg', $volumeFile
             )
             $arguments = $docker + $plantuml
-    
+
             Write-Host "> docker $($arguments -join ' ')"
             & docker $arguments |
                 Write-Host
@@ -86,13 +116,7 @@ ArrayList : remove()
     }
 
     Context "Custom include path" {
-        $includePath = Join-Path $TestDrive 'Include'
-        New-Item -ItemType Directory $includePath |
-            Out-Null
-
-        $includeFileName = 'include.puml'
-        $includeFile = Join-Path $includePath $includeFileName
-        $include = @"
+        $include = New-TestDriveFile 'Include\include.puml' @"
 @startuml
 
 interface List
@@ -101,14 +125,11 @@ List : remove()
 
 @enduml
 "@
-        Set-Content -Value $include -Path $includeFile
 
-        $diagramFileName = 'diagram.puml'
-        $diagramFile = Join-Path $TestDrive $diagramFileName
-        $diagram = @"
+        $diagram = New-TestDriveFile 'diagram.puml' @"
 @startuml
 
-!include $($includeFileName)
+!include $($include.FileName)
 
 class ArrayList
 ArrayList : size()
@@ -117,19 +138,18 @@ List <|.. ArrayList
 
 @enduml
 "@
-        Set-Content -Value $diagram -Path $diagramFile
 
         $volumePath = "C:\Volume"
-        $volumeFile = Join-Path $volumePath $diagramFileName
+        $volumeFile = Join-Path $volumePath $diagram.File
         $docker = @(
             'run',
-            '-e', "PLANTUML_INCLUDE_PATH=$(Join-Path $volumePath 'Include')"
+            '-e', "PLANTUML_INCLUDE_PATH=$(Join-Path $volumePath $include.SubPath)"
             '-v', "$($TestDrive):$($volumePath)"
             $ImageName
         )
 
         It "finds include file" {
-            $resultFile = [System.IO.Path]::ChangeExtension($diagramFile, '.png')
+            $resultFile = [System.IO.Path]::ChangeExtension($diagram.TestFile, '.png')
             $plantuml = @(
                 $volumeFile
             )
@@ -146,34 +166,3 @@ List <|.. ArrayList
         }
     }
 }
-
-function New-TestDriveFile {
-    param(
-        $File,
-        $Value
-    )
-
-    $FileName = Split-Path -Leaf $File
-    $SubPath = Split-Path -Parent $File
-    $TestFile = Join-Path $TestDrive $File
-
-    if ($SubPath) {
-        Join-Path $TestDrive $SubPath |
-            New-Item -ItemType Directory -ErrorAction SilentlyContinue |
-            Out-Null        
-    }
-    
-    Set-Content -Value $Value -Path $TestFile
-
-    Write-Host "== BEGIN: $($File) =="
-    Get-Content -Path $path |
-        Write-Host
-    Write-Host "== END: $($File) =="
-
-    @{
-        File = $File
-        FileName = $FileName
-        SubPath = $SubPath
-        TestFile = $TestFile
-    }
-} 

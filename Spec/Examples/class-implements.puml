@@ -1,7 +1,0 @@
-@startuml
-!include class.puml
-!include interface.puml
-
-List <|.. ArrayList
-
-@enduml

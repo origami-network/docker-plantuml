@@ -39,6 +39,4 @@ ENV PLANTUML_INCLUDE_PATH=.
 
 WORKDIR ${ARG_PLANTUML_PATH}
 SHELL ["cmd", "/S", "/C"]
-#ENTRYPOINT [ "java", "-Dplantuml.include.path=\"%PLANTUML_INCLUDE_PATH%\"", "-jar", "plantuml.jar" ]
-#ENTRYPOINT [ "java", "-jar", "plantuml.jar" ]
 ENTRYPOINT [ "entrypoint.bat" ]

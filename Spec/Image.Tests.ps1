@@ -1,40 +1,11 @@
 param (
     $Here = (Split-Path -Parent $MyInvocation.MyCommand.Path),
 
-    $ImageName = 'origaminetwork/plantuml',
-
-    $ExamplesPath = (Join-Path $Here Examples)
+    $ImageName = 'origaminetwork/plantuml'
 )
 
-function New-TestDriveFile {
-    param(
-        $File,
-        $Value
-    )
+Import-Module (Join-Path $Here 'Shared.psm1') -Force
 
-    $FileName = Split-Path -Leaf $File
-    $SubPath = Split-Path -Parent $File
-    $TestFile = Join-Path $TestDrive $File
-
-    if ($SubPath) {
-        New-Item (Join-Path $TestDrive $SubPath) -ItemType Directory -ErrorAction SilentlyContinue |
-            Out-Null
-    }
-
-    Set-Content -Value $Value -Path $TestFile
-
-    Write-Host "== BEGIN: $($File) =="
-    Get-Content -Path $TestFile |
-        Write-Host
-    Write-Host "== END: $($File) =="
-
-    @{
-        File = $File
-        FileName = $FileName
-        SubPath = $SubPath
-        TestFile = $TestFile
-    }
-}
 
 Describe "PlantUML image" {
     It "has configured GraphViz" {
@@ -144,7 +115,6 @@ List <|.. ArrayList
         $docker = @(
             'run',
             '-e', "PLANTUML_INCLUDE_PATH=$(Join-Path $volumePath $include.SubPath)"
-#            '-e', "_JAVA_OPTIONS=-Dplantuml.include.path=`"$(Join-Path $volumePath $include.SubPath)`""
             '-v', "$($TestDrive):$($volumePath)"
             $ImageName
         )

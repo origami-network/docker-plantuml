@@ -32,9 +32,7 @@ Describe "PlantUML image" {
     }
 
     Context "Simple diagram" {
-        $diagramFileName = 'diagram.puml'
-        $diagramFile = Join-Path $TestDrive $diagramFileName
-        $diagram = @"
+        $diagram = New-TestDriveFile 'diagram.puml' @"
 @startuml
 
 class ArrayList
@@ -43,10 +41,9 @@ ArrayList : remove()
 
 @enduml
 "@
-        Set-Content -Value $diagram -Path $diagramFile
 
         $volumePath = "C:\Volume"
-        $volumeFile = Join-Path $volumePath $diagramFileName
+        $volumeFile = Join-Path $volumePath $diagram.File
         $docker = @(
             'run',
             '-v', "$($TestDrive):$($volumePath)"
@@ -54,7 +51,7 @@ ArrayList : remove()
         )
 
         It "generates PNG diagram from file" {
-            $resultFile = [System.IO.Path]::ChangeExtension($diagramFile, '.png')
+            $resultFile = [System.IO.Path]::ChangeExtension($diagram.TestFile, '.png')
             $plantuml = @(
                 $volumeFile
             )
@@ -71,7 +68,7 @@ ArrayList : remove()
         }
     
         It "generates SVG diagram from file" {
-            $resultFile = [System.IO.Path]::ChangeExtension($diagramFile, '.svg')
+            $resultFile = [System.IO.Path]::ChangeExtension($diagram.TestFile, '.svg')
             $plantuml = @(
                 '-tsvg', $volumeFile
             )
@@ -149,3 +146,34 @@ List <|.. ArrayList
         }
     }
 }
+
+function New-TestDriveFile {
+    param(
+        $File,
+        $Value
+    )
+
+    $FileName = Split-Path -Leaf $File
+    $SubPath = Split-Path -Parent $File
+    $TestFile = Join-Path $TestDrive $File
+
+    if ($SubPath) {
+        Join-Path $TestDrive $SubPath |
+            New-Item -ItemType Directory -ErrorAction SilentlyContinue |
+            Out-Null        
+    }
+    
+    Set-Content -Value $Value -Path $TestFile
+
+    Write-Host "== BEGIN: $($File) =="
+    Get-Content -Path $path |
+        Write-Host
+    Write-Host "== END: $($File) =="
+
+    @{
+        File = $File
+        FileName = $FileName
+        SubPath = $SubPath
+        TestFile = $TestFile
+    }
+} 

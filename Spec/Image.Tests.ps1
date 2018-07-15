@@ -143,8 +143,8 @@ List <|.. ArrayList
         $volumeFile = Join-Path $volumePath $diagram.File
         $docker = @(
             'run',
-#            '-e', "PLANTUML_INCLUDE_PATH=$(Join-Path $volumePath $include.SubPath)"
-            '-e', "_JAVA_OPTIONS=-Dplantuml.include.path=`"$(Join-Path $volumePath $include.SubPath)`""
+            '-e', "PLANTUML_INCLUDE_PATH=$(Join-Path $volumePath $include.SubPath)"
+#            '-e', "_JAVA_OPTIONS=-Dplantuml.include.path=`"$(Join-Path $volumePath $include.SubPath)`""
             '-v', "$($TestDrive):$($volumePath)"
             $ImageName
         )

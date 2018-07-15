@@ -18,9 +18,9 @@ function New-TestDriveFile {
 
     if ($SubPath) {
         New-Item (Join-Path $TestDrive $SubPath) -ItemType Directory -ErrorAction SilentlyContinue |
-            Out-Null        
+            Out-Null
     }
-    
+
     Set-Content -Value $Value -Path $TestFile
 
     Write-Host "== BEGIN: $($File) =="
@@ -155,7 +155,7 @@ List <|.. ArrayList
                 $volumeFile
             )
             $arguments = $docker + $plantuml
-    
+
             Write-Host "> docker $($arguments -join ' ')"
             & docker $arguments |
                 Write-Host

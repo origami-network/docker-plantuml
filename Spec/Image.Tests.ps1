@@ -1,23 +1,139 @@
+param (
+    $Here = (Split-Path -Parent $MyInvocation.MyCommand.Path),
+
+    $ImageName = 'origaminetwork/plantuml'
+)
+
+Import-Module (Join-Path $Here 'Shared.psm1') -Force
+
+
 Describe "PlantUML image" {
-    It "can use GraphViz" {
-        (& docker run 'origaminetwork/plantuml' -testdot) |
-            % { Write-Host $_ }
-
-        Write-Error "TODO: implement it"
-    }
-
-    It "generates PNG diagram from file" {
-        Write-Error "TODO: implement it"
-    }
-
-    It "generates SVG diagram from file" {
-        Write-Error "TODO: implement it"
-    }
-
-    It "can use custom include path" {
-        $arguments = @(
-            '--env', "PLANTUML_INCLUDE_PATH=TODO: define test path"
+    It "has configured GraphViz" {
+        $plantuml = @(
+            '-testdot'
         )
-        Write-Error "TODO: implement it"
+        $docker = @(
+            'run', $ImageName
+        )
+        $arguments = $docker + $plantuml
+
+        Write-Host "> docker $($arguments -join ' ')"
+        $result = & docker $arguments
+        $result |
+            Write-Host
+
+        $LASTEXITCODE |
+            Should -Be 0
+        $result |
+            ? { $_ -like 'Error:*' } |
+            Should -HaveCount 0
+        $result |
+            ? { $_ -like '*OK*' } |
+            Should -HaveCount 1
+    }
+
+    Context "Simple diagram" {
+        $diagram = New-TestDriveFile 'diagram.puml' @"
+@startuml
+
+class ArrayList
+ArrayList : add()
+ArrayList : remove()
+
+@enduml
+"@
+
+        $volumePath = "C:\Volume"
+        $volumeFile = Join-Path $volumePath $diagram.File
+        $docker = @(
+            'run',
+            '-v', "$($TestDrive):$($volumePath)"
+            $ImageName
+        )
+
+        It "generates PNG diagram from file" {
+            $resultFile = [System.IO.Path]::ChangeExtension($diagram.TestFile, '.png')
+            $plantuml = @(
+                $volumeFile
+            )
+            $arguments = $docker + $plantuml
+
+            Write-Host "> docker $($arguments -join ' ')"
+            & docker $arguments |
+                Write-Host
+
+            $LASTEXITCODE |
+                Should -Be 0
+            $resultFile |
+                Should -Exist
+        }
+
+        It "generates SVG diagram from file" {
+            $resultFile = [System.IO.Path]::ChangeExtension($diagram.TestFile, '.svg')
+            $plantuml = @(
+                '-tsvg', $volumeFile
+            )
+            $arguments = $docker + $plantuml
+
+            Write-Host "> docker $($arguments -join ' ')"
+            & docker $arguments |
+                Write-Host
+
+            $LASTEXITCODE |
+                Should -Be 0
+            $resultFile |
+                Should -Exist
+        }
+    }
+
+    Context "Custom include path" {
+        $include = New-TestDriveFile 'Include\include.puml' @"
+@startuml
+
+interface List
+List : add()
+List : remove()
+
+@enduml
+"@
+
+        $diagram = New-TestDriveFile 'diagram.puml' @"
+@startuml
+
+!include $($include.FileName)
+
+class ArrayList
+ArrayList : size()
+
+List <|.. ArrayList
+
+@enduml
+"@
+
+        $volumePath = "C:\Volume"
+        $volumeFile = Join-Path $volumePath $diagram.File
+        $docker = @(
+            'run',
+            '-e', "PLANTUML_INCLUDE_PATH=$(Join-Path $volumePath $include.SubPath)"
+            '-v', "$($TestDrive):$($volumePath)"
+            $ImageName
+        )
+
+        It "finds include file" {
+            $resultFile = [System.IO.Path]::ChangeExtension($diagram.TestFile, '.png')
+            $plantuml = @(
+                $volumeFile
+            )
+            $arguments = $docker + $plantuml
+
+            Write-Host "> docker $($arguments -join ' ')"
+            & docker $arguments |
+                Write-Host
+
+            $LASTEXITCODE |
+                Should -Be 0
+            $resultFile |
+                Should -Exist
+        }
     }
 }

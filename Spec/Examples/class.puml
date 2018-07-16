@@ -1,7 +1,0 @@
-@startuml
-
-class ArrayList
-ArrayList : add()
-ArrayList : remove()
-
-@enduml

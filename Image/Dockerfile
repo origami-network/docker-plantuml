@@ -33,10 +33,10 @@ COPY --from=graphviz ${ARG_GRAPHVIZ_PATH} ${ARG_GRAPHVIZ_PATH}
 ENV GRAPHVIZ_DOT=${ARG_GRAPHVIZ_PATH}\\release\\bin\\dot.exe
 
 COPY --from=pluntuml ${ARG_PLANTUML_PATH} ${ARG_PLANTUML_PATH}
+COPY entrypoint.bat ${ARG_PLANTUML_PATH}
 
-WORKDIR ${ARG_PLANTUML_PATH}
 ENV PLANTUML_INCLUDE_PATH=.
 
-# TODO: enrypoint PlantUML
+WORKDIR ${ARG_PLANTUML_PATH}
 SHELL ["cmd", "/S", "/C"]
-ENTRYPOINT [ "java", "-Dplantuml.include.path=\"%PLANTUML_INCLUDE_PATH%\"", "-jar", "plantuml.jar" ]
+ENTRYPOINT [ "entrypoint.bat" ]

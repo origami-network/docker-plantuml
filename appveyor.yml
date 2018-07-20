@@ -1,4 +1,4 @@
-version: {build}
+# TODO: version: {build}
 
 image: Visual Studio 2017
 skip_tags: true

@@ -6,7 +6,7 @@ skip_tags: true
 install:
    - ps: |
       $version = .\Get-Version -BuildNumber $env:APPVEYOR_BUILD_NUMBER
-      Add-AppveyorMessage -Message "Change build version from '$($env:APPVEYOR_BUILD_VERSION)' to '$($version.Build)'"
+      Add-AppveyorMessage -Message "Change build version from '$($env:APPVEYOR_BUILD_VERSION)' to '$($version.Build)'."
       Update-AppveyorBuild -Version $version.Build
    - ps: New-Item -ItemType directory .\Artifacts | Out-Null
 
@@ -23,8 +23,12 @@ on_finish:
   - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\Artifacts\Spec.NUnit.xml'))
 
 deploy_script:
-  - ps: if ($env:APPVEYOR_REPO_BRANCH -eq "master") { Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)" }
-
-  # TODO: publish image
-  # - docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
-  # - docker push me/myfavoriteapp
+   - ps: |
+      if ($env:APPVEYOR_REPO_BRANCH -nq "master") {
+        Add-AppveyorMessage -Message "Make pull request to process." -Category Warning
+      } else {
+        Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)" }
+        # TODO: publish image
+        # - docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
+        # - docker push me/myfavoriteapp
+      }

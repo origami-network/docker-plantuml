@@ -2,7 +2,7 @@ image: Visual Studio 2017
 skip_tags: true
 
 install:
-   - ps: |
+   - ps: >-
     $version = .\Get-Version -BuildNumber $env:APPVEYOR_BUILD_NUMBER
     Update-AppveyorBuild -Version $version.Build
     New-Item -ItemType directory .\Artifacts | Out-Null

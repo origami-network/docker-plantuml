@@ -5,7 +5,7 @@ skip_tags: true
 
 install:
    - ps: |
-      $version = .\Get-Version -BuildNumber $env:APPVEYOR_BUILD_NUMBER
+      $version = .\Get-ProjectVersion -BuildNumber $env:APPVEYOR_BUILD_NUMBER
       Add-AppveyorMessage -Message "Change build version from '$($env:APPVEYOR_BUILD_VERSION)' to '$($version.Build)'."
       Update-AppveyorBuild -Version $version.Build
    - ps: New-Item -ItemType directory .\Artifacts | Out-Null

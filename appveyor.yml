@@ -26,9 +26,9 @@ deploy_script:
    - ps: |
       if ($env:APPVEYOR_REPO_BRANCH -nq "master") {
         Add-AppveyorMessage -Message "Make pull request to process." -Category Warning
-      } else {
-        Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)" }
-        # TODO: publish image
-        # - docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
-        # - docker push me/myfavoriteapp
+        Exit-AppveyorBuild
       }
+      Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)"
+      # TODO: publish image
+      # - docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
+      # - docker push me/myfavoriteapp

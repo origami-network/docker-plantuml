@@ -4,8 +4,9 @@ skip_tags: true
 install:
    - ps: |
       $version = .\Get-Version -BuildNumber $env:APPVEYOR_BUILD_NUMBER
+      Add-AppveyorMessage -Message "Change build version from '$($env:APPVEYOR_BUILD_VERSION)' to '$($version.Build)'"
       Update-AppveyorBuild -Version $version.Build
-      New-Item -ItemType directory .\Artifacts | Out-Null
+   - ps: New-Item -ItemType directory .\Artifacts | Out-Null
 
 build_script:
   - docker build -t origaminetwork/plantuml Image

@@ -2,15 +2,15 @@
 param(
     [string] $BasePath = (Get-Location),
 
+    [string] $BaseVersion = (. (Join-Path $BasePath 'project.config.ps1')).Version,
     [long] $BuildNumber
 )
 
 $ErrorActionPreference = 'Stop'
 
 
-$project = . (Join-Path $BasePath 'project.config.ps1')
-
-$publishVersion = $project.Version
+Write-Verbose "Project Version: deliver from '($BaseVersion)'"
+$publishVersion = $BaseVersion
 $buildVersion = "$($publishVersion).$($BuildNumber)".Trim('.')
 
 [psobject]@{

@@ -13,12 +13,12 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if ($Dependencies) {
-    Write-Verbose "Project Dependencies: install"
+    Write-Verbose "Project Dependencies: install module:"
     $Dependencies |
         % {
             Write-Verbose "Project Dependencies:  * $($_.Name)"
 
-            if ($Force) {
+            if ($Force -and (-not $_.ContainsKey('Force'))) {
                 $_.Add('Force', $Force)
             }
             if ($SkipPublisherCheck) {

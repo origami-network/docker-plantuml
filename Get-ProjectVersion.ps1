@@ -9,7 +9,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 
-Write-Verbose "Project Version: deliver from '($BaseVersion)'"
+Write-Verbose "Project Version: deliver from '$($BaseVersion)'"
 $publishVersion = $BaseVersion
 $buildVersion = "$($publishVersion).$($BuildNumber)".Trim('.')
 

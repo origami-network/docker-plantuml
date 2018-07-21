@@ -5,6 +5,9 @@ param(
     [long] $BuildNumber
 )
 
+$ErrorActionPreference = 'Stop'
+
+
 $project = . (Join-Path $BasePath 'project.config.ps1')
 
 $publishVersion = $project.Version

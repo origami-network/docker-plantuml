@@ -19,6 +19,7 @@ install:
       }
       if ($tasks.High) {
         Add-AppveyorMessage -Message "Found $($tasks.High.Count) tasks with high priority." -Category Error
+        # TBD: Set the flag with results
       }
 
    - ps: |
@@ -38,6 +39,7 @@ on_finish:
 
 deploy_script:
    - ps: |
+      # FIXME: do not publish if there are high priority tasks
       if ($env:APPVEYOR_REPO_BRANCH -ne "master") {
         Add-AppveyorMessage -Message "Make pull request to process." -Category Warning
         Exit-AppveyorBuild

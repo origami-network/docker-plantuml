@@ -9,7 +9,7 @@ install:
       Add-AppveyorMessage -Message "Change build version from '$($env:APPVEYOR_BUILD_VERSION)' to '$($version.Build)'."
       Update-AppveyorBuild -Version $version.Build
    - ps: |
-      $tasks = Select-RemainingTask.ps1 -Verbose |
+      $tasks = .\Select-RemainingTask -Verbose |
         Group-Object -Property Priority -AsHashTable
       if ($tasks.Low) {
         Add-AppveyorMessage -Message "Found $($tasks.Low.Count) tasks with low priority."

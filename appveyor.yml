@@ -5,11 +5,11 @@ skip_tags: true
 
 install:
    - ps: |
-      $version = .\Get-ProjectVersion -BuildNumber $env:APPVEYOR_BUILD_NUMBER
+      $version = .\Get-ProjectVersion -Verbose -BuildNumber $env:APPVEYOR_BUILD_NUMBER
       Add-AppveyorMessage -Message "Change build version from '$($env:APPVEYOR_BUILD_VERSION)' to '$($version.Build)'."
       Update-AppveyorBuild -Version $version.Build
    - ps: |
-      .\Install-ProjectDependencies.ps1 -Force -SkipPublisherCheck
+      .\Install-ProjectDependencies -Verbose -Force -SkipPublisherCheck
 
 build_script:
    - docker build -t origaminetwork/plantuml Image

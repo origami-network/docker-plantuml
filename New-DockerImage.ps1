@@ -4,7 +4,7 @@ param(
 
     [hashtable] $Image = (. (Join-Path $BasePath 'project.config.ps1')).Image,
 
-    [string] $Name = $Image.Names,
+    [string] $Name = $Image.Name,
     [string] $ContextPath = (Join-Path $BasePath $Image.Context.Path)
 )
 

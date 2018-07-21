@@ -1,3 +1,5 @@
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingCmdletAliases", "")]
+
 [CmdletBinding()]
 param(
     [string] $BasePath = (Get-Location),

@@ -1,3 +1,5 @@
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingCmdletAliases", "")]
+
 #Requires -Modules PackageManagement
 
 [CmdletBinding(SupportsShouldProcess)]

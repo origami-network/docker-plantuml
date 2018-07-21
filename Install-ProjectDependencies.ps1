@@ -22,7 +22,7 @@ if ($Dependencies) {
                 $_.Add('Force', $Force)
             }
             if ($SkipPublisherCheck) {
-                $_.Add('$SkipPublisherCheck', $SkipPublisherCheck)
+                $_.Add('SkipPublisherCheck', $SkipPublisherCheck)
             }
             Install-Module @_
         }

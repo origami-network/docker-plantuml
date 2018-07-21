@@ -12,6 +12,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+
 if ($Dependencies) {
     Write-Verbose "Project Dependencies: install module:"
     $Dependencies |

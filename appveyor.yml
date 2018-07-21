@@ -8,19 +8,19 @@ install:
       $version = .\Get-ProjectVersion -BuildNumber $env:APPVEYOR_BUILD_NUMBER
       Add-AppveyorMessage -Message "Change build version from '$($env:APPVEYOR_BUILD_VERSION)' to '$($version.Build)'."
       Update-AppveyorBuild -Version $version.Build
-   - ps: New-Item -ItemType directory .\Artifacts | Out-Null
+   - ps: |
+      .\Install-ProjectDependencies.ps1 -Force -SkipPublisherCheck
 
 build_script:
-  - docker build -t origaminetwork/plantuml Image
+   - docker build -t origaminetwork/plantuml Image
   
-before_test:
-  - ps: Install-Module -Name Pester -RequiredVersion 4.3.1 -Force -SkipPublisherCheck
-
 test_script:
-  - ps: Invoke-Pester -Path ".\Spec" -OutputFormat NUnitXml -OutputFile '.\Artifacts\Spec.NUnit.xml' -EnableExit -Verbose
+   - ps: |
+      New-Item -ItemType directory .\Artifacts | Out-Null
+      Invoke-Pester -Path ".\Spec" -OutputFormat NUnitXml -OutputFile '.\Artifacts\Spec.NUnit.xml' -EnableExit -Verbose
   
 on_finish:
-  - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\Artifacts\Spec.NUnit.xml'))
+   - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\Artifacts\Spec.NUnit.xml'))
 
 deploy_script:
    - ps: |

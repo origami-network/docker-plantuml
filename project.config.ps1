@@ -18,4 +18,8 @@ $script:Revision = 0
             }
         }
     }
+
+    Dependencies = @(
+        @{ Name = 'Pester'; RequiredVersion = '4.3.1'; Force = $true }
+    )
 }

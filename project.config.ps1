@@ -9,6 +9,9 @@ $script:Revision = 0
     Image = @{
         Name = "origaminetwork/plantuml"
 
+        Context = @{
+            Path = "Image"
+        }
         Arguments = @{
             PluntUml = @{
                 Version = $script:PluntUmlVersion

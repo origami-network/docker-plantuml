@@ -12,7 +12,8 @@ install:
       .\Install-ProjectDependencies -Verbose -Force -SkipPublisherCheck
 
 build_script:
-   - docker build -t origaminetwork/plantuml Image
+   - ps: |
+      .\New-DockerImage -Verbose
   
 test_script:
    - ps: |

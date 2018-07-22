@@ -9,16 +9,11 @@ install:
       Add-AppveyorMessage -Message "Change build version from '$($env:APPVEYOR_BUILD_VERSION)' to '$($version.Build)'."
       Update-AppveyorBuild -Version $version.Build
    - ps: |
-      $tasks = .\Select-RemainingTask -Verbose |
-        Group-Object -Property Priority -AsHashTable
-      $tasks.Low.Count |
-        % { Add-AppveyorMessage -Message "Found $($_) tasks with low priority." }
-      $tasks.Medium.Count |
-        % { Add-AppveyorMessage -Message "Found $($_) tasks with medium priority." -Category Warning }
-      $tasks.High.Count |
+      $tasks = .\Select-RemainingTask -Verbose -Low Information -Medium Warning -High Error |
+        Group-Object -Property Priority |
         % {
-          Add-AppveyorMessage -Message "Found $($_) tasks with high priority." -Category Error
-          Set-AppveyorBuildVariable -Name 'BUILD_TASKS_HIGH_COUNT' -Value $_
+          Add-AppveyorMessage -Message "Found $($_.Count) `$($_.Name)` remaining tasks."
+          Set-AppveyorBuildVariable -Name "BUILD_TASKS_$($_.Name.ToUpper())_COUNT" -Value $_.Count
         }
    - ps: |
       .\Install-ProjectDependencies -Verbose -Force -SkipPublisherCheck
@@ -37,7 +32,7 @@ on_finish:
 
 deploy_script:
    - ps: |
-      if ($env:BUILD_TASKS_HIGH_COUNT) {
+      if ($env:BUILD_TASKS_ERROR_COUNT) {
         Add-AppveyorMessage -Message "Resolve high remaining task to process." -Category Warning
         Exit-AppveyorBuild
       }

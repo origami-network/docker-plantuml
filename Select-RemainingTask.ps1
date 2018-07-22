@@ -4,6 +4,10 @@
 param(
     [string] $BasePath = (Get-Location),
 
+    [string] $Low = 'Low',
+    [string] $Medium = 'Medium',
+    [string] $High = 'High',
+
     [string] $LowPattern = 'T{1}BD:?',
     [string] $MediumPattern = 'T{1}ODO:?',
     [string] $HighPattern = 'F{1}IXME:?'
@@ -50,15 +54,17 @@ function New-RemaningTask {
 
 $files = Get-ChildItem $BasePath -Recurse -File
 
-'Low', 'Medium', 'High' |
+@{ Priority = 'Low'; Name = $Low },
+@{ Priority = 'Medium'; Name = $Medium },
+@{ Priority = 'High'; Name = $High } |
     % {
-        $priority = $_
-        $pattern = (Get-Variable -Name "$($priority)Pattern").Value
+        $pattern = (Get-Variable -Name "$($_.Priority)Pattern").Value
 
-        Write-Verbose "Remaining Tasks: $($_.ToLower())"
+        $name = $_.Name
+        Write-Verbose "Remaining Tasks: $($name)"
         $files |
             Select-String -Pattern $pattern |
-            New-RemaningTask -Priority $priority |
+            New-RemaningTask -Priority $name |
             % {
                 Write-Verbose "Remaining Tasks:  * $($_.File):$($_.LineNumber):`n$($_.Example)"
                 $_

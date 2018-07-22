@@ -11,17 +11,15 @@ install:
    - ps: |
       $tasks = .\Select-RemainingTask -Verbose |
         Group-Object -Property Priority -AsHashTable
-      if ($tasks.Low) {
-        Add-AppveyorMessage -Message "Found $($tasks.Low.Count) tasks with low priority."
-      }
-      if ($tasks.Medium) {
-        Add-AppveyorMessage -Message "Found $($tasks.Medium.Count) tasks with medium priority." -Category Warning
-      }
-      if ($tasks.High) {
-        Add-AppveyorMessage -Message "Found $($tasks.High.Count) tasks with high priority." -Category Error
-        # TBD: Set the flag with results
-      }
-
+      $tasks.Low.Count |
+        % { Add-AppveyorMessage -Message "Found $($_) tasks with low priority." }
+      $tasks.Medium.Count |
+        % { Add-AppveyorMessage -Message "Found $($_) tasks with medium priority." -Category Warning }
+      $tasks.High.Count |
+        % {
+          Add-AppveyorMessage -Message "Found $($_) tasks with high priority." -Category Error
+          Set-AppveyorBuildVariable -Name 'BUILD_TASKS_HIGH_COUNT' -Value $_
+        }
    - ps: |
       .\Install-ProjectDependencies -Verbose -Force -SkipPublisherCheck
 
@@ -39,11 +37,16 @@ on_finish:
 
 deploy_script:
    - ps: |
-      # FIXME: do not publish if there are high priority tasks
+      if ($env:BUILD_TASKS_HIGH_COUNT) {
+        Add-AppveyorMessage -Message "Resolve high remaining task to process." -Category Warning
+        Exit-AppveyorBuild
+      }
+   - ps: |
       if ($env:APPVEYOR_REPO_BRANCH -ne "master") {
         Add-AppveyorMessage -Message "Make pull request to process." -Category Warning
         Exit-AppveyorBuild
       }
+   - ps: |
       Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)"
       # FIXME: publish image
       # - docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"

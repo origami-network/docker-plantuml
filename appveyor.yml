@@ -12,7 +12,7 @@ install:
       $tasks = .\Select-RemainingTask -Verbose -Low Information -Medium Warning -High Error |
         Group-Object -Property Priority |
         % {
-          Add-AppveyorMessage -Message "Found $($_.Count) `$($_.Name)` remaining tasks."
+          Add-AppveyorMessage -Message "Found $($_.Count) '$($_.Name)' remaining tasks." -Category $_.Name
           Set-AppveyorBuildVariable -Name "BUILD_TASKS_$($_.Name.ToUpper())_COUNT" -Value $_.Count
         }
    - ps: |

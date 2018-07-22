@@ -1,6 +1,4 @@
 $script:PluntUmlVersion = "1.2018.8"
-$script:GraphViz = "2.38"
-
 $script:Revision = 0
 
 @{
@@ -17,7 +15,7 @@ $script:Revision = 0
                 Version = $script:PluntUmlVersion
             }
             GraphViz = @{
-                Version = $script:GraphViz
+                Version = "2.38"
             }
         }
     }

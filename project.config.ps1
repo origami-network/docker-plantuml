@@ -13,7 +13,7 @@ $script:Revision = 0
             Path = "Image"
         }
         Arguments = @{
-            PluntUml = @{
+            PlantUml = @{
                 Version = $script:PluntUmlVersion
             }
             GraphViz = @{

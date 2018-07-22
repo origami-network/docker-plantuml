@@ -13,13 +13,44 @@ param(
 $ErrorActionPreference = 'Stop'
 
 
-Write-Verbose "Docker Image: build '$($Name)'"
+Write-Verbose "Docker Image: prepare arguments"
+function ConvertTo-FlatArray {
+    param (
+        [string] $Name,
+        [object[]] $Value,
+
+        [string] $Sepeartor = '_'
+    )
+
+    begin {}
+    process {
+        $Value |
+            % {
+                if ($_ -is [hashtable]) {
+                    $_.GetEnumerator() |
+                        % { ConvertTo-FlatArray -Name ($Name, $_.Name -join $Sepeartor) -Value $_.Value -Sepeartor $Sepeartor }
+                } else {
+                    @{
+                        Name = $Name
+                        Value = $Value
+                    }
+                }
+            }
+    }
+    end {}
+}
 $arguments = @(
     'build',
-    '--tag', $Name,
-    $ContextPath
+    '--tag', $Name
 )
-# FIXME: [#6 2.2.] Pass image arguments
+$arguments += ConvertTo-FlatArray -Name 'ARG' -Value $Image.Arguments |
+    % {
+        '--build-arg'
+        "$($_.Name.ToUpper())=$($_.Value)"
+    }
+$arguments += $ContextPath
+
+Write-Verbose "Docker Image: build '$($Name)'"
 & docker $arguments |
     Out-Default
 if ($LASTEXITCODE) {

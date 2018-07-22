@@ -19,6 +19,7 @@ $arguments = @(
     '--tag', $Name,
     $ContextPath
 )
+# FIXME: [#6 2.2.] Pass image arguments
 & docker $arguments |
     Out-Default
 if ($LASTEXITCODE) {

@@ -7,4 +7,16 @@
 PlantUML - Windows Docker image
 ==
 
-TODO: Describe
+
+## Usage
+
+TODO: Describe usage
+
+
+## Contributing
+
+In order to contribute to the project please fallow [Contributing Guidance](CONTRIBUTING.md).
+
+## License
+
+The project is licensed under [MIT License](LICENSE).

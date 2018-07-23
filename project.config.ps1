@@ -18,9 +18,16 @@ $script:Revision = 0
                 Version = "2.38"
             }
         }
+        Specification = @{
+            Path = "Spec"
+        }
     }
 
     Dependencies = @(
         @{ Name = 'Pester'; RequiredVersion = '4.3.1' }
     )
+
+    Artifacts = @{
+        Path = ".Artifacts"
+    }
 }

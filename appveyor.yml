@@ -25,12 +25,11 @@ build_script:
 test_script:
    - ps: |
       # FIXME: [#6 4.1.] invoke specification (script)
-      New-Item -ItemType directory .\Artifacts | Out-Null
-      Invoke-Pester -Path ".\Spec" -OutputFormat NUnitXml -OutputFile '.\Artifacts\Spec.NUnit.xml' -EnableExit -Verbose
+      .\Assert-DockerImage.ps1 -Verbose
   
 on_finish:
   # FIXME: [#6 4.2.] report results (script)
-   - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\Artifacts\Spec.NUnit.xml'))
+   - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\Artifacts\Spec\DockerImage.NUnit.xml'))
   # FIXME: [#6 4.2.] publish results as CI/CD artifacts
   
 deploy_script:

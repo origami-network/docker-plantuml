@@ -27,9 +27,19 @@ test_script:
       .\Assert-DockerImage.ps1 -Verbose
   
 on_finish:
-  # FIXME: [#6 4.2.] report results (script)
-   - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\.Artifacts\Spec\DockerImage.NUnit.xml'))
-  # FIXME: [#6 4.2.] publish results as CI/CD artifacts
+   - ps: |
+      (. (Resolve-Path 'project.config.ps1')).Artifacts.Path |
+        Resolve-Path |
+        Get-ChildItem -Recurse -File -Include "*.NUnit.xml" |
+        % {
+          # FIXME: [#6 4.2.] report results (script)
+          .\Add-AppveyorTestResult.ps1 $_
+          # FIXME: [#6 4.2.] publish results as CI/CD artifacts
+          Push-AppveyorArtifact $_
+        }
+
+
+
   
 deploy_script:
    - ps: |

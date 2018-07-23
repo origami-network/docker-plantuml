@@ -1,3 +1,5 @@
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingCmdletAliases", "")]
+
 param (
     [Parameter(Mandatory = $true)]
     $ImageName,

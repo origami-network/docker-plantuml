@@ -1,9 +1,11 @@
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingCmdletAliases", "")]
+
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
     [string[]] $Path,
 
-    [ValidateSet('NUnit')] 
+    [ValidateSet('NUnit')]
     [string] $Framework = 'NUnit'
 )
 

@@ -9,7 +9,7 @@ param(
 
 
 begin {
-    $uploadUrl = "https://ci.appveyor.com/api/testresults/$($Framework.ToLoower())/$($env:APPVEYOR_JOB_ID)"
+    $uploadUrl = "https://ci.appveyor.com/api/testresults/$($Framework.ToLower())/$($env:APPVEYOR_JOB_ID)"
 }
 
 process {

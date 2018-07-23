@@ -10,12 +10,13 @@ param(
 
 begin {
     $uploadUrl = "https://ci.appveyor.com/api/testresults/$($Framework.ToLower())/$($env:APPVEYOR_JOB_ID)"
+    $webClient = New-Object 'System.Net.WebClient'
 }
 
 process {
     $Path |
         % {
-            Invoke-WebRequest -Uri $uploadUrl -Method Post -InFile $_
+            $webClient.UploadFile($uploadUrl, (Resolve-Path $Path))
         }
 }
 

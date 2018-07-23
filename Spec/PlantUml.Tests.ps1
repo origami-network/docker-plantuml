@@ -1,10 +1,12 @@
 param (
-    $Here = (Split-Path -Parent $MyInvocation.MyCommand.Path),
+    [Parameter(Mandatory = $true)]
+    $ImageName,
 
-    $ImageName = 'origaminetwork/plantuml'
+    $Here = (Split-Path -Parent $MyInvocation.MyCommand.Path),
+    $ModulesPath = (Join-Path $Here "Modules")
 )
 
-Import-Module (Join-Path $Here 'Shared.psm1') -Force
+Import-Module (Join-Path $ModulesPath 'TestDrive.psm1') -Force
 
 
 Describe "PlantUML image" {

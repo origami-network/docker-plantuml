@@ -28,4 +28,10 @@ New-Item $ArtifactsPath -ItemType Directory -Force -ErrorAction SilentlyContinue
     Out-Null
 
 Write-Verbose "Docker Image: assert specification"
-Invoke-Pester -Path $SpecificationPath -OutputFormat NUnitXml -OutputFile $ArtifactNUnitFile
+$script = @(
+    @{
+        Path = $SpecificationPath
+        Parameters = @{ ImageName = $Name }
+    }
+)
+Invoke-Pester -Script $script -OutputFormat NUnitXml -OutputFile $ArtifactNUnitFile

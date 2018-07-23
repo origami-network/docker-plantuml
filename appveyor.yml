@@ -29,7 +29,7 @@ test_script:
   
 on_finish:
   # FIXME: [#6 4.2.] report results (script)
-   - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\Artifacts\Spec\DockerImage.NUnit.xml'))
+   - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\.Artifacts\Spec\DockerImage.NUnit.xml'))
   # FIXME: [#6 4.2.] publish results as CI/CD artifacts
   
 deploy_script:

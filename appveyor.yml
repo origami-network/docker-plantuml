@@ -24,7 +24,6 @@ build_script:
   
 test_script:
    - ps: |
-      # FIXME: [#6 4.1.] invoke specification (script)
       .\Assert-DockerImage.ps1 -Verbose
   
 on_finish:

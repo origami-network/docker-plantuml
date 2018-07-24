@@ -8,6 +8,8 @@ install:
       $version = .\Get-ProjectVersion -Verbose -BuildNumber $env:APPVEYOR_BUILD_NUMBER
       Add-AppveyorMessage -Message "Change build version from '$($env:APPVEYOR_BUILD_VERSION)' to '$($version.Build)'."
       Update-AppveyorBuild -Version $version.Build
+      Set-AppveyorBuildVariable -Name 'BUILD_VERSION' -Value $version.Build
+      Set-AppveyorBuildVariable -Name 'PUBLISH_VERSION' -Value $version.Publish
    - ps: |
       $tasks = .\Select-RemainingTask -Verbose -Low Information -Medium Warning -High Error |
         Group-Object -Property Priority |
@@ -38,10 +40,7 @@ deploy_script:
         Exit-AppveyorBuild
       }
    - ps: |
-      Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)"
-      # FIXME: [#6 5.] publish image
-      # - docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
-      # - docker push me/myfavoriteapp
+      .\Publish-DockerImage.ps1 -Tag @($env:PUBLISH_VERSION, $env:BUILD_VERSION)
 
 on_finish:
    - ps: |

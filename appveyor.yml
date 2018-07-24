@@ -40,7 +40,7 @@ deploy_script:
         Exit-AppveyorBuild
       }
    - ps: |
-      .\Publish-DockerImage.ps1 -Tag @($env:PUBLISH_VERSION, $env:BUILD_VERSION)
+      .\Publish-DockerImage.ps1 -Verbose -Tag @($env:PUBLISH_VERSION, $env:BUILD_VERSION)
 
 on_finish:
    - ps: |

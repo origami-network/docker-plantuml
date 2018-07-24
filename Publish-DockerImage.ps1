@@ -35,7 +35,7 @@ function Read-DockerImageTags {
         }
     }
 }
-$matchedTag = Get-DockerImageTags $Name |
+$matchedTag = Read-DockerImageTags $Name |
     ? { $Tag -contains $_ } |
     Select-Object -First 1
 if ($matchedTag) {

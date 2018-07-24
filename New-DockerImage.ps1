@@ -54,5 +54,5 @@ Write-Verbose "Docker Image: build '$($Name)'"
 & docker $arguments |
     Out-Default
 if ($LASTEXITCODE) {
-    Write-Error "Docker Image: 'build $($arguments -join ' ')' failed with status $($LASTEXITCODE)."
+    Write-Error "Docker Image: 'docker $($arguments -join ' ')' failed with status $($LASTEXITCODE)."
 }

@@ -3,6 +3,7 @@ version: '{build}'
 image: Visual Studio 2017
 skip_tags: true
 
+
 install:
    - ps: |
       $version = .\Get-ProjectVersion -Verbose -BuildNumber $env:APPVEYOR_BUILD_NUMBER
@@ -19,6 +20,7 @@ install:
         }
    - ps: |
       .\Install-ProjectDependencies -Verbose -Force -SkipPublisherCheck
+
 
 build_script:
    - ps: |
@@ -41,6 +43,7 @@ deploy_script:
       }
    - ps: |
       .\Publish-DockerImage.ps1 -Verbose -Tag @($env:PUBLISH_VERSION, $env:BUILD_VERSION)
+
 
 on_finish:
    - ps: |

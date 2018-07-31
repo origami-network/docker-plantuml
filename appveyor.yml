@@ -1,24 +1,56 @@
+version: '{build}'
+
 image: Visual Studio 2017
 skip_tags: true
 
+
 install:
-   - ps: New-Item -ItemType directory .\Artifacts | Out-Null
+   - ps: |
+      $version = .\Get-ProjectVersion -Verbose -BuildNumber $env:APPVEYOR_BUILD_NUMBER
+      Add-AppveyorMessage -Message "Change build version from '$($env:APPVEYOR_BUILD_VERSION)' to '$($version.Build)'."
+      Update-AppveyorBuild -Version $version.Build
+      Set-AppveyorBuildVariable -Name 'BUILD_VERSION' -Value $version.Build
+      Set-AppveyorBuildVariable -Name 'PUBLISH_VERSION' -Value $version.Publish
+   - ps: |
+      $tasks = .\Select-RemainingTask -Verbose -Low Information -Medium Warning -High Error |
+        Group-Object -Property Priority |
+        % {
+          Add-AppveyorMessage -Message "Found $($_.Count) '$($_.Name)' remaining tasks." -Category $_.Name
+          Set-AppveyorBuildVariable -Name "BUILD_TASKS_$($_.Name.ToUpper())_COUNT" -Value $_.Count
+        }
+   - ps: |
+      .\Install-ProjectDependencies -Verbose -Force -SkipPublisherCheck
+
 
 build_script:
-  - docker build -t origaminetwork/plantuml Image
+   - ps: |
+      .\New-DockerImage -Verbose
   
-before_test:
-  - ps: Install-Module -Name Pester -RequiredVersion 4.3.1 -Force -SkipPublisherCheck
-
 test_script:
-  - ps: Invoke-Pester -Path ".\Spec" -OutputFormat NUnitXml -OutputFile '.\Artifacts\Spec.NUnit.xml' -EnableExit -Verbose
-  
-on_finish:
-  - ps: (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path '.\Artifacts\Spec.NUnit.xml'))
-
+   - ps: |
+      .\Assert-DockerImage.ps1 -Verbose
+    
 deploy_script:
-  - ps: if ($env:APPVEYOR_REPO_BRANCH -eq "master") { Write-Host "$($env:DOCKER_USER)" "$($env:DOCKER_PASS)" }
+   - ps: |
+      if ($env:BUILD_TASKS_ERROR_COUNT) {
+        Add-AppveyorMessage -Message "Resolve high remaining task to process." -Category Warning
+        Exit-AppveyorBuild
+      }
+   - ps: |
+      if ($env:APPVEYOR_REPO_BRANCH -ne "master") {
+        Add-AppveyorMessage -Message "Make pull request to process." -Category Warning
+        Exit-AppveyorBuild
+      }
+   - ps: |
+      .\Publish-DockerImage.ps1 -Verbose -Tag @($env:PUBLISH_VERSION, $env:BUILD_VERSION)
 
-  # TODO: publish image
-  # - docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
-  # - docker push me/myfavoriteapp
+
+on_finish:
+   - ps: |
+      (. (Resolve-Path 'project.config.ps1')).Artifacts.Path |
+        Resolve-Path |
+        Get-ChildItem -Recurse -File -Include "*.NUnit.xml" |
+        % {
+          .\Add-AppveyorTestResult.ps1 $_
+          Push-AppveyorArtifact $_
+        }

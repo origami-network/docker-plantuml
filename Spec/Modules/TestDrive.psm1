@@ -1,8 +1,8 @@
 [CmdletBinding]
 function New-TestDriveFile {
     param(
-        $File,
-        $Value
+        [string] $File,
+        [string] $Value
     )
 
     $FileName = Split-Path -Leaf $File

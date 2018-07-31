@@ -1,10 +1,14 @@
-param (
-    $Here = (Split-Path -Parent $MyInvocation.MyCommand.Path),
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingCmdletAliases", "")]
 
-    $ImageName = 'origaminetwork/plantuml'
+param (
+    [Parameter(Mandatory = $true)]
+    $ImageName,
+
+    $Here = (Split-Path -Parent $MyInvocation.MyCommand.Path),
+    $ModulesPath = (Join-Path $Here "Modules")
 )
 
-Import-Module (Join-Path $Here 'Shared.psm1') -Force
+Import-Module (Join-Path $ModulesPath 'TestDrive.psm1') -Force
 
 
 Describe "PlantUML image" {

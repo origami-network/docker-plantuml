@@ -1,19 +1,33 @@
-$script:PluntUmlVersion = "1.2018.8" 
-$script:GraphViz = "2.38"
-
+$script:PluntUmlVersion = "1.2018.8"
 $script:Revision = 0
 
 @{
+    Version = "$($script:PluntUmlVersion).$($script:Revision)"
+
     Image = @{
         Name = "origaminetwork/plantuml"
-        Tag = "$($script:PluntUmlVersion).$($script:Revision)"
+
+        Context = @{
+            Path = "Image"
+        }
         Arguments = @{
-            PluntUml = @{
+            PlantUml = @{
                 Version = $script:PluntUmlVersion
             }
             GraphViz = @{
-                Version = $script:GraphViz
+                Version = "2.38"
             }
         }
+        Specification = @{
+            Path = "Spec"
+        }
+    }
+
+    Dependencies = @(
+        @{ Name = 'Pester'; RequiredVersion = '4.3.1' }
+    )
+
+    Artifacts = @{
+        Path = ".Artifacts"
     }
 }

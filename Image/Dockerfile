@@ -1,6 +1,6 @@
 FROM microsoft/windowsservercore as graphviz
 
-ARG ARG_GRAPHVIZ_VERSION=2.38
+ARG ARG_GRAPHVIZ_VERSION
 ARG ARG_GRAPHVIZ_URL=https://graphviz.gitlab.io/_pages/Download/windows/graphviz-${ARG_GRAPHVIZ_VERSION}.zip
 ARG ARG_GRAPHVIZ_PATH=C:\\GraphViz
 
@@ -13,7 +13,7 @@ RUN powershell.exe -Command $ErrorActionPreference = 'Stop' ; \
 
 FROM microsoft/windowsservercore as pluntuml
 
-ARG ARG_PLANTUML_VERSION=1.2018.8
+ARG ARG_PLANTUML_VERSION
 ARG ARG_PLANTUML_URL=https://downloads.sourceforge.net/project/plantuml/${ARG_PLANTUML_VERSION}/plantuml.${ARG_PLANTUML_VERSION}.jar?r=&ts=0
 ARG ARG_PLANTUML_PATH=C:\\PlantUML
 

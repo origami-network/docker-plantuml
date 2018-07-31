@@ -10,7 +10,7 @@ PlantUML - Windows Docker image
 
 ## Usage
 
-FIXME: Describe usage
+TODO: Describe usage
 
 
 ## Contributing

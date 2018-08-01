@@ -4,7 +4,7 @@
 param(
     [string] $BasePath = (Get-Location),
 
-    [string] $Name = (. (Join-Path $BasePath 'project.config.ps1')).Image,
+    [string] $Name = (. (Join-Path $BasePath 'project.config.ps1')).Image.Name,
     [string[]] $Tag,
 
     [string] $UserName = $env:DOCKER_USERNAME,
@@ -23,12 +23,12 @@ function Read-DockerImageTags {
 
     try {
         do {
-            $response = Invoke-RestMethod $next;
+            $response = Invoke-RestMethod $Next;
             $response.results |
                 % { $_.name }
 
-            $next = $response.next
-        } while ($next)
+            $Next = $response.next
+        } while ($Next)
     } catch {
         if ($_.Exception.Response.StatusCode.Value__ -ne 404) {
             throw

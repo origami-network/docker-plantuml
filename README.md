@@ -29,6 +29,8 @@ Base <|-- Subclass
 
 This Docker image allows to use PlantUML without need of installation on Windows 2016 and Windows 10.
 
+The Docker image accepts all parameters as specified [PlantUML command line](http://plantuml.com/command-line).
+
 
 ### Pull Docker image
 
@@ -41,8 +43,6 @@ Before start the image need to be pulled from the [Docker Hub](https://hub.docke
 Where `X.X.X.Y` is the version of the image.
 
 ### Generate image file
-
-The image accepts all parameters as [PlantUML command line](http://plantuml.com/command-line.
 
 For the file `diagram.puml` located in `C:\Users\UserName\Documents\` folder, fallowing command will generate `diagram.png` image file.
 

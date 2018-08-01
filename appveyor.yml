@@ -29,18 +29,15 @@ build_script:
 test_script:
    - ps: |
       .\Assert-DockerImage.ps1 -Verbose
-    
-before_deploy:
+      
+after_test:
    - ps: |
       if ($env:BUILD_TASKS_ERROR_COUNT) {
         Add-AppveyorMessage -Message "Resolve high remaining task to process." -Category Warning
         Exit-AppveyorBuild
       }
-   - ps: |
-      if ($env:APPVEYOR_REPO_BRANCH -ne "master") {
-        Add-AppveyorMessage -Message "Make pull request to process." -Category Warning
-        Exit-AppveyorBuild
-      }
+
+before_deploy:
    - ps: |
       .\Publish-DockerImage.ps1 -Verbose -Tag @($env:PUBLISH_VERSION, $env:BUILD_VERSION)
 

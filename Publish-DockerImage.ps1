@@ -46,6 +46,7 @@ Write-Verbose "Docker Image: tag"
 $publishTag = $Tag |
     % {
         $newTag = "$($Name):$($_)"
+        Write-Verbose "Docker Image:  * $($newTag)"
         $arguments = @(
             'tag', $Name, $newTag
         )
@@ -75,6 +76,7 @@ if ($UserName) {
 Write-Verbose "Docker Image: push"
 $publishTag |
     % {
+        Write-Verbose "Docker Image:  * $($_)"
         $arguments = @(
             'push', $_
         )

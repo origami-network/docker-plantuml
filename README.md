@@ -28,8 +28,7 @@ Base <|-- Subclass
 ## Usage
 
 This Docker image allows to use PlantUML without need of installation on Windows 2016 and Windows 10.
-
-The Docker image accepts all parameters as specified [PlantUML command line](http://plantuml.com/command-line).
+It accepts all parameters as specified by [PlantUML command line](http://plantuml.com/command-line).
 
 
 ### Pull Docker image

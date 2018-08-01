@@ -64,12 +64,13 @@ if ($UserName) {
     $arguments = @(
         'login',
         '--username', $UserName,
-        '--password'
+        '--password-stdin'
     )
-    & docker ($arguments + $UserPassword) |
+    $UserPassword |
+        & docker $arguments |
         Out-Default
     if ($LASTEXITCODE) {
-        Write-Error "Docker Image: 'docker $($arguments -join ' ') ***' failed with status $($LASTEXITCODE)."
+        Write-Error "Docker Image: 'docker $($arguments -join ' ')' failed with status $($LASTEXITCODE)."
     }
 }
 

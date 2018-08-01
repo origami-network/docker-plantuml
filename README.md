@@ -35,7 +35,7 @@ It accepts all parameters as specified by [PlantUML command line](http://plantum
 
 Before start the image need to be pulled from the [Docker Hub](https://hub.docker.com/r/origaminetwork/plantuml/).
 
-```powershell
+```console
 > docker pull origaminetwork/plantuml:X.X.X.Y
 ```
 
@@ -45,13 +45,13 @@ Where `X.X.X.Y` is the version of the image.
 
 For the file `diagram.puml` located in `C:\Users\UserName\Documents\` folder, fallowing command will generate `diagram.png` image file.
 
-```
+```console
 > docker run -v C:\Users\UserName\Documents:C:\Volume origaminetwork/plantuml:X.X.X.Y C:\Volume\diagram.puml
 ```
 
 If the `.svg` image file should be generated the command below could be used.
 
-```
+```console
 > docker run -v C:\Users\UserName\Documents:C:\Volume origaminetwork/plantuml:X.X.X.Y -tsvg C:\Volume\diagram.puml
 ```
 

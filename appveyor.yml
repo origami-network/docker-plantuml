@@ -30,7 +30,7 @@ test_script:
    - ps: |
       .\Assert-DockerImage.ps1 -Verbose
     
-deploy_script:
+before_deploy:
    - ps: |
       if ($env:BUILD_TASKS_ERROR_COUNT) {
         Add-AppveyorMessage -Message "Resolve high remaining task to process." -Category Warning
@@ -44,6 +44,17 @@ deploy_script:
    - ps: |
       .\Publish-DockerImage.ps1 -Verbose -Tag @($env:PUBLISH_VERSION, $env:BUILD_VERSION)
 
+deploy:
+  provider: GitHub
+  tag: v$(PUBLISH_VERSION)
+  release: $(PUBLISH_VERSION)
+  description: 'Build version: $(BUILD_VERSION)'
+  auth_token: $(GITHUB_TOKEN)
+  draft: false
+  prerelease: false
+  on:
+    branch: master
+    appveyor_repo_tag: true   
 
 on_finish:
    - ps: |

@@ -45,8 +45,13 @@ $arguments = @(
 )
 $arguments += ConvertTo-FlatArray -Name 'ARG' -Value $Image.Arguments |
     % {
+        $key = $_.Name.ToUpper()
+        $value = $_.Value
+
+        Write-Verbose "Docker Image:  * $($key) = $($value)"
+         
         '--build-arg'
-        "$($_.Name.ToUpper())=$($_.Value)"
+        "$($key)=$($value)"
     }
 $arguments += $ContextPath
 

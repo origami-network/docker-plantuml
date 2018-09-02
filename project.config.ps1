@@ -1,4 +1,4 @@
-$script:PluntUmlVersion = "1.2018.9"
+$script:PluntUmlVersion = "1.2018.10"
 $script:Revision = 0
 
 @{

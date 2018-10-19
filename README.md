@@ -22,7 +22,7 @@ Base <|-- Subclass
 @enduml
 ```
 
-![Example class diagram](https://www.plantuml.com/plantuml/img/SoWkIImgAStDuU9ApaaiBbPmIYnEXJA3IvF032ukaA22JOskBfAOGsfU2b0V0000)
+![Example class diagram](README.example.png)
 
 
 ## Usage

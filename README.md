@@ -1,7 +1,12 @@
 
-| master | latest |
+| release | master | latest |
+| :--: | :--: | :--: |
+| [![latest release](https://img.shields.io/github/release/origami-network/docker-plantuml.svg)](https://github.com/origami-network/docker-plantuml/releases/latest) | [![master status](https://ci.appveyor.com/api/projects/status/ekvnf486e8wdk4hh/branch/master?svg=true)](https://ci.appveyor.com/project/BartDubois/docker-plantuml/branch/master) | [![latest status](https://ci.appveyor.com/api/projects/status/ekvnf486e8wdk4hh?svg=true)](https://ci.appveyor.com/project/BartDubois/docker-plantuml) |
+
+
+| pulls | stars |
 | :--: | :--: |
-| [![Build status](https://ci.appveyor.com/api/projects/status/ekvnf486e8wdk4hh/branch/master?svg=true)](https://ci.appveyor.com/project/BartDubois/docker-plantuml/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/ekvnf486e8wdk4hh?svg=true)](https://ci.appveyor.com/project/BartDubois/docker-plantuml) |
+| [![Docker Pulls](https://img.shields.io/docker/pulls/origaminetwork/plantuml.svg)](https://hub.docker.com/r/origaminetwork/plantuml/) | [![Docker Stars](https://img.shields.io/docker/stars/origaminetwork/plantuml.svg)](https://hub.docker.com/r/origaminetwork/plantuml/) |
 
 
 PlantUML - Windows Docker image
